@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/configuration-server/configuration-server.iml" filepath="$PROJECT_DIR$/configuration-server/configuration-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/cqrs-microservices.iml" filepath="$PROJECT_DIR$/.idea/cqrs-microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/registry-server/registry-server.iml" filepath="$PROJECT_DIR$/registry-server/registry-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/search-microservice/search-microservice.iml" filepath="$PROJECT_DIR$/search-microservice/search-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/upsert-microservice/upsert-microservice.iml" filepath="$PROJECT_DIR$/upsert-microservice/upsert-microservice.iml" />
+    </modules>
+  </component>
+</project>

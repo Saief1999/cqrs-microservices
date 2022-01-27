@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="search-microservice" />
+        <module name="registry-server" />
+        <module name="upsert-microservice" />
+        <module name="configuration-server" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="configuration-server" target="11" />
+      <module name="registry-server" target="11" />
+      <module name="search-microservice" target="11" />
+      <module name="upsert-microservice" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="configuration-server" options="-parameters" />
+      <module name="registry-server" options="-parameters" />
+      <module name="search-microservice" options="-parameters" />
+      <module name="upsert-microservice" options="-parameters" />
+    </option>
+  </component>
+</project>
