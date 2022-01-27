@@ -1,0 +1,34 @@
+package com.example.upsertmicroservice.pojos;
+
+import com.example.upsertmicroservice.entities.Movie;
+
+public class UpdateMessage {
+
+    private Movie movie ;
+    private boolean isDeleted = false;
+
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public UpdateMessage(Movie movie, boolean isDeleted) {
+        this.movie = movie;
+        this.isDeleted = isDeleted;
+    }
+
+    public UpdateMessage() {}
+
+}
