@@ -2,6 +2,7 @@ package com.example.upsertmicroservice.controllers;
 
 import com.example.upsertmicroservice.entities.Movie;
 import com.example.upsertmicroservice.exceptions.BadRequestException;
+import com.example.upsertmicroservice.pojos.UpdateMessage;
 import com.example.upsertmicroservice.producers.Producer;
 import com.example.upsertmicroservice.repositories.MovieRepository;
 import org.springframework.http.HttpStatus;
@@ -25,13 +26,17 @@ public class MovieUpsertController
 
 
 
-    @PostMapping("/publish")
-    public String publish()
-    {
-        String message = "Hello there today";
-        producer.sendMessage(message);
-        return "Published " + message;
-    }
+//    @PostMapping("/publish")
+//    public String publish()
+//    {
+//        Movie movie = new Movie() ;
+//        movie.setId("1");
+//        movie.setName("Movie Example");
+//        movie.setDescription("This is my description");
+//        UpdateMessage message = new UpdateMessage(movie,false);
+//        producer.sendUpdate(message);
+//        return "Published " + message;
+//    }
 
 
     @GetMapping("/movies/{id}")
@@ -54,7 +59,10 @@ public class MovieUpsertController
     @PostMapping("/movies")
     public Movie createMovie(@RequestBody Movie movie)
     {
-        return movieRepository.save(movie);
+        Movie newMovie =  movieRepository.save(movie);
+        producer.sendUpdate(new UpdateMessage(newMovie, false)); // update the query db
+
+        return newMovie;
     }
 
 
@@ -65,7 +73,10 @@ public class MovieUpsertController
         if(!movieRepository.existsById(movie.getId()))
             throw new BadRequestException(BadRequestException.ID_NOT_FOUND,"Movie Not found with id " + movie.getId());
 
-        return movieRepository.save(movie);
+        Movie updatedMovie= movieRepository.save(movie);
+
+        producer.sendUpdate(new UpdateMessage(updatedMovie, false)); // update the query db
+        return updatedMovie;
     }
 
     @DeleteMapping("/movies/{id}")
@@ -75,6 +86,11 @@ public class MovieUpsertController
             throw new BadRequestException(BadRequestException.ID_NOT_FOUND,"Movie Not found with id " + id);
 
         movieRepository.deleteById(id);
+
+        Movie deletedMovie =  new Movie();
+        deletedMovie.setId(id);
+
+        producer.sendUpdate(new UpdateMessage(deletedMovie, true)); // update the query db
         return new ResponseEntity<String>("Movie deleted",HttpStatus.OK);
     }
 

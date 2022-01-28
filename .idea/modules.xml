@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/configuration-server/configuration-server.iml" filepath="$PROJECT_DIR$/configuration-server/configuration-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/cqrs-microservices.iml" filepath="$PROJECT_DIR$/.idea/cqrs-microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gateway-service/gateway-service.iml" filepath="$PROJECT_DIR$/gateway-service/gateway-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/registry-server/registry-server.iml" filepath="$PROJECT_DIR$/registry-server/registry-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/search-microservice/search-microservice.iml" filepath="$PROJECT_DIR$/search-microservice/search-microservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/upsert-microservice/upsert-microservice.iml" filepath="$PROJECT_DIR$/upsert-microservice/upsert-microservice.iml" />

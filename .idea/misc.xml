@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/upsert-microservice/pom.xml" />
         <option value="$PROJECT_DIR$/configuration-server/pom.xml" />
         <option value="$PROJECT_DIR$/registry-server/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway-service/pom.xml" />
       </list>
     </option>
   </component>

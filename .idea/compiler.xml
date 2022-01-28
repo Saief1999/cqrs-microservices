@@ -8,12 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="search-microservice" />
         <module name="registry-server" />
+        <module name="gateway-service" />
         <module name="upsert-microservice" />
         <module name="configuration-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="configuration-server" target="11" />
+      <module name="gateway-service" target="11" />
       <module name="registry-server" target="11" />
       <module name="search-microservice" target="11" />
       <module name="upsert-microservice" target="11" />
@@ -22,6 +24,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="configuration-server" options="-parameters" />
+      <module name="gateway-service" options="-parameters" />
       <module name="registry-server" options="-parameters" />
       <module name="search-microservice" options="-parameters" />
       <module name="upsert-microservice" options="-parameters" />

@@ -31,4 +31,11 @@ public class UpdateMessage {
 
     public UpdateMessage() {}
 
+    @Override
+    public String toString() {
+        return "UpdateMessage{" +
+                "movie=" + movie.getId() +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
 }

@@ -26,7 +26,6 @@ public class MovieSearchController {
 
     @GetMapping("/movies/{id}")
     public Movie getMovie(@PathVariable("id") String id) {
-
         return movieRepository.findById(id).orElseThrow(()-> {
             String errMsg = "Movie Not found with id " + id ;
             return new BadRequestException(BadRequestException.ID_NOT_FOUND, errMsg);
