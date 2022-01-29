@@ -13,7 +13,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 public class UpsertMicroserviceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UpsertMicroserviceApplication.class, args);
+    SpringApplication.run(UpsertMicroserviceApplication.class, args);
     }
 
 }

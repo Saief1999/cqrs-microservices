@@ -3,8 +3,10 @@ package com.example.upsertmicroservice.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @Document
-public class Movie
+public class Movie implements Serializable
 {
     @Id
     private String id;

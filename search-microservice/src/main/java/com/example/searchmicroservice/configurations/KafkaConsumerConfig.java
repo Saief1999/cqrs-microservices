@@ -3,6 +3,8 @@ package com.example.searchmicroservice.configurations;
 import com.example.searchmicroservice.pojos.UpdateMessage;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerPartitionAssignor;
+import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +27,7 @@ public class KafkaConsumerConfig {
 
     @Value("${kafka.group-id}")
     private String groupId;
+
     @Bean
     public ConsumerFactory<String, UpdateMessage> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -38,6 +41,10 @@ public class KafkaConsumerConfig {
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
                 "earliest"
         );
+        props.put(
+                ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG,
+                RoundRobinAssignor.class.getName()
+        ); // setting the partition strategy to Round Robin, so each service consumes a message at a time
 
         JsonDeserializer<UpdateMessage> jsonDeserializer = new JsonDeserializer<>();
 

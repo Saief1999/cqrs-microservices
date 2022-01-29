@@ -18,7 +18,6 @@ public class Projector {
         String id = movie.getId();
         movieRepository.deleteById(id);
         System.out.println(String.format("#### -> removed Movie with id -> %s", id));
-
     }
 
     public void upsertMovie(Movie movie) {

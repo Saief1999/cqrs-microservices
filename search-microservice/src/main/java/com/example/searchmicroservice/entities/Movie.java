@@ -3,8 +3,10 @@ package com.example.searchmicroservice.entities;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
+import java.io.Serializable;
+
 @Document(indexName = "movie", versionType = Document.VersionType.EXTERNAL)
-public class Movie
+public class Movie implements Serializable
 {
     @Id
     private String id;
