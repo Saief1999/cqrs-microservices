@@ -1,0 +1,126 @@
+version: '2'
+
+services:
+  registry-server:
+    build:
+      context: ./registry-server
+      dockerfile: Dockerfile
+    container_name: registry-server
+    ports:
+      - "8761:8761"
+    networks:
+      - spring-cqrs-network
+
+  configuration-server:
+    build:
+      context: ./configuration-server
+      dockerfile: Dockerfile
+    container_name: configuration-server
+    ports:
+      - "8888:8888"
+    depends_on:
+      - registry-server
+    networks:
+      - spring-cqrs-network
+
+  search-microservice:
+    build:
+      context: ./search-microservice
+      dockerfile: Dockerfile
+    container_name: search-microservice
+    ports:
+      - "8086:8086"
+    depends_on:
+      - configuration-server
+      - redis-server
+      - kafka-server
+      - es-server
+    networks:
+      - spring-cqrs-network
+
+  upsert-microservice:
+    build:
+      context: ./upsert-microservice
+      dockerfile: Dockerfile
+    container_name: upsert-microservice
+    ports:
+      - "8085:8085"
+    depends_on:
+      - configuration-server
+      - kafka-server
+    networks:
+      - spring-cqrs-network
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - upsert-microservice
+      - search-microservice
+    networks:
+      - spring-cqrs-network
+
+  redis-server:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - spring-cqrs-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - spring-cqrs-network
+
+  kafka-server:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - spring-cqrs-network
+
+  es-server:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    container_name: es01
+    environment:
+      - node.name=es01
+      - cluster.name=local-cluster
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - spring-cqrs-network
+
+volumes:
+  data01:
+    driver: local
+
+networks:
+  spring-cqrs-network:
+    driver: bridge
