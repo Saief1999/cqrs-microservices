@@ -6,6 +6,8 @@ services:
       context: ./registry-server
       dockerfile: Dockerfile
     container_name: registry-server
+    expose:
+      - "8761"
     ports:
       - "8761:8761"
     networks:
@@ -20,6 +22,8 @@ services:
       - "8888:8888"
     depends_on:
       - registry-server
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
     networks:
       - spring-cqrs-network
 
@@ -35,6 +39,11 @@ services:
       - redis-server
       - kafka-server
       - es-server
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
+      kafka.host: kafka-server:9092
+      spring.redis.host: redis-server
+      spring.data.elasticsearch.cluster-nodes: es-server:9200
     networks:
       - spring-cqrs-network
 
@@ -48,6 +57,9 @@ services:
     depends_on:
       - configuration-server
       - kafka-server
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
+      kafka.host: kafka-server:9092
     networks:
       - spring-cqrs-network
 
@@ -61,6 +73,8 @@ services:
     depends_on:
       - upsert-microservice
       - search-microservice
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
     networks:
       - spring-cqrs-network
 

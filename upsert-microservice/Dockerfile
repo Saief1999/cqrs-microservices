@@ -19,5 +19,8 @@ ARG DEPENDENCY=/workspace/app/target/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+
 # execute with no shell wrapping
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.upsertmicroservice.UpsertMicroserviceApplication"]
+#ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.upsertmicroservice.UpsertMicroserviceApplication"]
+COPY wait-for.sh wait-for.sh
+ENTRYPOINT [ "/bin/sh" ,"wait-for.sh","registry-server:8761", "-t", "0", "--", "java","-cp","app:app/lib/*","com.example.upsertmicroservice.UpsertMicroserviceApplication"]
