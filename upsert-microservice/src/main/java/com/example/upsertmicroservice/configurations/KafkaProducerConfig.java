@@ -37,7 +37,6 @@ public class KafkaProducerConfig {
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 kafkaHost);
-
         JsonSerializer<UpdateMessage> jsonSerializer = new JsonSerializer<>();
         Map<String, Object> idMappings = new HashMap<>();
 

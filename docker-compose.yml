@@ -41,7 +41,17 @@ services:
       - es-server
     environment:
       eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
-      kafka.host: kafka-server:9092
+#      spring.config.import: "optional:configuration-server:"
+      spring.cloud.config.fail-fast: "true"
+      spring.cloud.config.retry.max-attemps: 20
+      spring.cloud.config.retry.max-interval: 15000
+      spring.cloud.config.retry.initial-interval: 10000
+      spring.cloud.config.discovery.enabled: "true"
+      eureka.client.enabled: "true"
+      eureka.client.register-with-eureka: "true"
+      eureka.client.fetch-registry: "true"
+      spring.cloud.config.discovery.service-id: configuration-server
+      spring.kafka.bootstrap-servers: kafka-server:9092
       spring.redis.host: redis-server
       spring.data.elasticsearch.cluster-nodes: es-server:9200
     networks:
@@ -59,7 +69,16 @@ services:
       - kafka-server
     environment:
       eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
-      kafka.host: kafka-server:9092
+      spring.cloud.config.fail-fast: "true"
+      spring.cloud.config.retry.max-attemps: 20
+      spring.cloud.config.retry.max-interval: 15000
+      spring.cloud.config.retry.initial-interval: 10000
+      spring.cloud.config.discovery.enabled: "true"
+      eureka.client.enabled: "true"
+      eureka.client.register-with-eureka: "true"
+      eureka.client.fetch-registry: "true"
+      spring.cloud.config.discovery.service-id: configuration-server
+      spring.kafka.bootstrap-servers: kafka-server:9092
     networks:
       - spring-cqrs-network
 
@@ -88,6 +107,7 @@ services:
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -96,8 +116,26 @@ services:
     networks:
       - spring-cqrs-network
 
+#  kafka-server:
+#    image: confluentinc/cp-kafka:latest
+#    depends_on:
+#      - zookeeper
+#    ports:
+#      - "29092:29092"
+#    environment:
+#      KAFKA_BROKER_ID: 1
+#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-server:9092,PLAINTEXT_HOST://localhost:29092
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#    networks:
+#      - spring-cqrs-network
+
+
   kafka-server:
     image: confluentinc/cp-kafka:latest
+    hostname: kafka-server
     depends_on:
       - zookeeper
     ports:
@@ -105,12 +143,14 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-server:9092,OUTSIDE://localhost:29092
+      KAFKA_ADVERTISED_HOST_NAME: kafka-server
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
     networks:
       - spring-cqrs-network
+
 
   es-server:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1

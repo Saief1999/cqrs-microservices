@@ -23,4 +23,4 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 #ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.searchmicroservice.SearchMicroserviceApplication"]
 
 COPY wait-for.sh wait-for.sh
-ENTRYPOINT [ "/bin/sh" ,"wait-for.sh","registry-server:8761", "-t", "0", "--", "java","-cp","app:app/lib/*","com.example.searchmicroservice.SearchMicroserviceApplication"]
+ENTRYPOINT [ "/bin/sh" ,"wait-for.sh","kafka-server:9092", "-t", "0", "--", "java","-cp","app:app/lib/*","com.example.searchmicroservice.SearchMicroserviceApplication"]
