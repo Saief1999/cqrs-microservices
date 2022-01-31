@@ -40,7 +40,7 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.13.1</version>
         </dependency>
-
+        <!-- needed otherwise can't get config server from registry-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
