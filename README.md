@@ -1,6 +1,6 @@
 # CQRS Microservices
 
-- This is a proposed CQRS implementations using Spring Boot
+- This is a proposed CQRS implementation using Spring Boot
 
 ## Usage
 
