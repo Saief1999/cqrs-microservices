@@ -68,14 +68,26 @@
 
 ## Usage
 
-Make sure that kafka, redis and elasticsearch are installed locally and listening on their default port.
+### Without using docker containers
 
-After installing the necessary maven dependencies, do the following:
+If you want to run the services locally. Make sure that kafka, redis and elasticsearch are installed and listening on their default port.
 
-1. Run the Registry Service
-2. Run the Configuration Server
-3. Run the Upsert microservice
-4. Run the Search microservice
-5. Run the Api Gateway
+After installing the necessary maven dependencies : 
 
-> To finish
+- Change the host of the different services in `src/main/resources/application.properties` ( or `application.yml`) of each service. Or you can add them to your `iptable` as `localhost`
+- Run the services in the following order:
+  1. Run the Registry Service
+  1. Run the Configuration Server
+  1. Run the Upsert microservice
+  1. Run the Search microservice
+  1. Run the Api Gateway
+
+### Using Docker containers
+
+Make sure that `docker` &`docker-compose` are available on your machine. Then run :
+
+```bash
+docker compose up
+```
+
+Wait for the images to be pulled and the packaging to finish up. You can then access the **api gateway** on port `8082` (change it if necessary)
