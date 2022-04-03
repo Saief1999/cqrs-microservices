@@ -23,4 +23,4 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 # execute with no shell wrapping
 #ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.upsertmicroservice.UpsertMicroserviceApplication"]
 COPY wait-for.sh wait-for.sh
-ENTRYPOINT [ "/bin/sh" ,"wait-for.sh","kafka-server:9092", "-t", "0", "--", "java","-cp","app:app/lib/*","com.example.upsertmicroservice.UpsertMicroserviceApplication"]
+ENTRYPOINT [ "/bin/sh" ,"wait-for.sh","kafka-server:9092", "-t", "0", "--", "java","-cp","app:app/lib/*","com.example.upsertmicroservice.UpsertMicroserviceApplication","-Djdk.tls.client.protocols=TLSv1.2"]

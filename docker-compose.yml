@@ -42,18 +42,27 @@ services:
     environment:
       eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
 #      spring.config.import: "optional:configuration-server:"
+
+      # registry & configurations servers config
+      eureka.client.enabled: "true"
+      eureka.client.register-with-eureka: "true"
+      eureka.client.fetch-registry: "true"
       spring.cloud.config.fail-fast: "true"
       spring.cloud.config.retry.max-attemps: 20
       spring.cloud.config.retry.max-interval: 15000
       spring.cloud.config.retry.initial-interval: 10000
       spring.cloud.config.discovery.enabled: "true"
-      eureka.client.enabled: "true"
-      eureka.client.register-with-eureka: "true"
-      eureka.client.fetch-registry: "true"
+
       spring.cloud.config.discovery.service-id: configuration-server
+      # Kafka Config
       spring.kafka.bootstrap-servers: kafka-server:9092
+      # Redis Config
       spring.redis.host: redis-server
+      # Elastic Config
+      spring.data.elasticsearch.repositories.enabled: true
       spring.data.elasticsearch.cluster-nodes: es-server:9200
+      spring.data.elasticsearch.cluster-name: local-cluster
+      spring.elasticsearch.rest.uris: es-server:9200
     networks:
       - spring-cqrs-network
 
@@ -67,7 +76,9 @@ services:
     depends_on:
       - configuration-server
       - kafka-server
+      - mongodb-server
     environment:
+      # Registry and configuration servers config
       eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
       spring.cloud.config.fail-fast: "true"
       spring.cloud.config.retry.max-attemps: 20
@@ -78,7 +89,13 @@ services:
       eureka.client.register-with-eureka: "true"
       eureka.client.fetch-registry: "true"
       spring.cloud.config.discovery.service-id: configuration-server
-      spring.kafka.bootstrap-servers: kafka-server:9092
+      # Kafka config
+      spring.kafka.bootstrap-servers: kafka-server:9092 # this is critical, otherwise it won't work
+      # Mongo Config
+      spring.data.mongodb.host: mongodb-server
+      spring.data.mongodb.database: cqrs-db
+      spring.data.mongodb.port: 27017
+
     networks:
       - spring-cqrs-network
 
@@ -116,22 +133,6 @@ services:
     networks:
       - spring-cqrs-network
 
-#  kafka-server:
-#    image: confluentinc/cp-kafka:latest
-#    depends_on:
-#      - zookeeper
-#    ports:
-#      - "29092:29092"
-#    environment:
-#      KAFKA_BROKER_ID: 1
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-server:9092,PLAINTEXT_HOST://localhost:29092
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-#      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-#    networks:
-#      - spring-cqrs-network
-
 
   kafka-server:
     image: confluentinc/cp-kafka:latest
@@ -140,14 +141,21 @@ services:
       - zookeeper
     ports:
       - "29092:29092"
+      - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-server:9092,OUTSIDE://localhost:29092
-      KAFKA_ADVERTISED_HOST_NAME: kafka-server
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+#      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:29092
+#      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-server:9092,OUTSIDE://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-server:9092,PLAINTEXT_HOST://localhost:29092
+#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+#      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # Override the default 3 replication factor
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - spring-cqrs-network
 
@@ -168,6 +176,16 @@ services:
       - data01:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
+    networks:
+      - spring-cqrs-network
+
+
+  mongodb-server:
+    image: mongo
+    container_name: mongoDB
+    restart: always
+    ports:
+      - "27017:27017"
     networks:
       - spring-cqrs-network
 

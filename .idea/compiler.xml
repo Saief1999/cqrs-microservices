@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="search-microservice" />
         <module name="registry-server" />
+        <module name="search-microservice" />
         <module name="gateway-service" />
         <module name="upsert-microservice" />
         <module name="configuration-server" />
