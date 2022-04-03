@@ -22,8 +22,6 @@ services:
       - "8888:8888"
     depends_on:
       - registry-server
-    environment:
-      eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
     networks:
       - spring-cqrs-network
 
@@ -52,6 +50,7 @@ services:
       spring.cloud.config.discovery.enabled: "true"
       spring.cloud.config.discovery.service-id: configuration-server
 
+
     networks:
       - spring-cqrs-network
 
@@ -79,7 +78,6 @@ services:
       eureka.client.fetch-registry: "true"
       spring.cloud.config.discovery.service-id: configuration-server
 
-
     networks:
       - spring-cqrs-network
 
@@ -93,8 +91,6 @@ services:
     depends_on:
       - upsert-microservice
       - search-microservice
-    environment:
-      eureka.client.serviceUrl.defaultZone: http://registry-server:8761/eureka
     networks:
       - spring-cqrs-network
 

@@ -7,6 +7,9 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
+# build all dependencies for offline use
+RUN ./mvnw dependency:go-offline -B
+
 # build a jar file
 RUN ./mvnw install -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
