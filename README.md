@@ -1,5 +1,9 @@
 # CQRS Microservices
 
+## New Improvements
+
+This Infrastructure setup has been deployed on **Azure** using its relevant services and technologies as a proof of concept. You can see it here : [New Azure infrastructure](https://github.com/Saief1999/cqrs-azure)
+
 ## Overview
 
 - This is a proposed CQRS implementation using Spring Boot : 
